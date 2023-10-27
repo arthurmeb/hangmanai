@@ -12,7 +12,7 @@
 
     <div class="guesses" v-for="guess in guessList" :key="guess">
       <!--This will display da guesses-->
-      <div class="guess">Your guess: {{ guess }} </div>
+      <div class="guess">Your guess: {{ guess }} | Accuracy: {{ guessAccuracy }}% </div>
     </div>
 
     <div class="answer" v-if="gameDone"> The right prompt was {{ prompt }}</div>
@@ -32,17 +32,57 @@ import { ref } from "vue"
 
   let userGuess = ref('')
   let guessList = []
+  let guessAccuracy = null
+
   // let lastGuess = 'users last guess from array'
 
-  const handleGuess = () => {guessList.push(userGuess.value), checkDone(), userGuess.value = '', console.log('enter pressed', guessList)}
+  const handleGuess = () => {
+    guessList.push(userGuess.value),
+    checkDone(), userGuess.value = '',
+    console.log('Current guess list:', guessList)
+    }
 
-  // Guess accuracy
-
-  // let checkAccuracy = crazy javascripting 
-  let guessAccuracy = 20
 
   let gameDone = false
-  let checkDone = () => {console.log('Game checked'); if (guessList.length == 6 || guessAccuracy >= 80) {gameDone = true, console.log('Game is done!')}}
+  let checkDone = () => {
+    checkGuessAccuracy
+    console.log('Game state has been checked.');
+    if (guessList.length == 6) 
+    {
+      gameDone = true, console.log('Out of tries!')
+      }
+    else if (guessAccuracy >= 80){
+      gameDone = true, console.log('You won!')
+    }
+    }  
+
+    // le function
+  let checkGuessAccuracy = () => {
+      // Guess accuracy logic
+
+        // create promptWords array with each word as an element
+    const promptWords = prompt.split("")
+        // get the previous guess in guessList array
+    let lastGuess = guessList[guessList.length - 1]
+        // make the previous guess into an array to be checked against prompt words
+    const lastGuessChecker = lastGuess.split("")
+        // store the correct words
+    const correctWords = []
+        // calculate guess accuracy percentage
+
+    
+    promptWords.forEach(word => {
+      if (lastGuessChecker.includes(word)) {
+        correctWords.push(word)
+      }
+    })
+    console.log('Prompt word array:', {promptWords}, 'Correct words:', {correctWords}),
+    guessAccuracy = (correctWords.length / promptWords.length) * 100
+  }
+
+
+
+
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
