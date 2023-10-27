@@ -28,24 +28,26 @@
 <script setup>
 import { ref } from "vue"
 
-  const prompt = 'Walter White smoking it up dawggg'
+  const primePrompt = 'Walter White smoking it up dawggg'
+  const imgPrompt = primePrompt.toLowerCase()
 
-  let userGuess = ref('')
+  let userGuessPrime = ref('')
+  let userGuess = userGuessPrime.value.toLowerCase()
   let guessList = []
   let guessAccuracy = null
 
   // let lastGuess = 'users last guess from array'
 
   const handleGuess = () => {
-    guessList.push(userGuess.value),
-    checkDone(), userGuess.value = '',
+    guessList.push(userGuess), console.log('Guess:', userGuess)
+    checkDone(), userGuess = '',
     console.log('Current guess list:', guessList)
     }
 
 
   let gameDone = false
   let checkDone = () => {
-    checkGuessAccuracy
+    checkGuessAccuracy()
     console.log('Game state has been checked.');
     if (guessList.length == 6) 
     {
@@ -59,13 +61,14 @@ import { ref } from "vue"
     // le function
   let checkGuessAccuracy = () => {
       // Guess accuracy logic
-
+      console.log('Gonna check guess accuracy')
         // create promptWords array with each word as an element
-    const promptWords = prompt.split("")
+    const promptWords = imgPrompt.split(" ")
+  
         // get the previous guess in guessList array
     let lastGuess = guessList[guessList.length - 1]
         // make the previous guess into an array to be checked against prompt words
-    const lastGuessChecker = lastGuess.split("")
+    const lastGuessChecker = lastGuess.split(" ")
         // store the correct words
     const correctWords = []
         // calculate guess accuracy percentage
@@ -76,7 +79,7 @@ import { ref } from "vue"
         correctWords.push(word)
       }
     })
-    console.log('Prompt word array:', {promptWords}, 'Correct words:', {correctWords}),
+    console.log('Last guess', {lastGuessChecker}, 'Correct words:', {correctWords}),
     guessAccuracy = (correctWords.length / promptWords.length) * 100
   }
 
