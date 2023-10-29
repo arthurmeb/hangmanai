@@ -8,20 +8,25 @@
     <div class="playground">
   
       <div class="prompt">
+
         <div> Your right words:
           <div class="hint" v-for="word in allCorrectWords" :key="word">{{ word }}</div>
         </div>
-
-
-
-        <img src="../assets/walder.png" alt="" height="250" width="250">
+        <div>
+          <img src="../assets/walder.png" alt="" height="250" width="250">
         <input class="input" placeholder="Guess the prompt!" @keyup.enter="handleGuess" v-model="userGuessPrime" :disabled="gameDone"/>
       </div>
-  
+
+      </div>
   
       <div class="guesses" v-for="answer in guessList" :key="answer">
         <!--This will display da guesses-->
-        <div class="guess">Your guess: {{ answer.guess }} | Accuracy: {{ answer.accuracy }}%</div>
+        <div class="inline">Your guess:
+           <p class="inline" v-for="word in answerWords" :key="word" :style="answerStyles(word)">
+            {{ word }}
+           </p>
+        | Accuracy: {{ answer.accuracy }}% 
+        </div>
       </div>
   
   
@@ -38,7 +43,7 @@
   
   
   <script setup>
-  import { computed } from "vue";
+  import { computed} from "vue";
   import { ref } from "vue"
   
   
@@ -52,6 +57,7 @@
     let lastGuess
     let correctWords
     let allCorrectWords = ref([])
+    let answerWords
     // Log user's guess => check if game is finished => check guess accuracy
   
     const handleGuess = () => {
@@ -59,30 +65,49 @@
         guess: userGuess.value,
         accuracy: guessAccuracy.value,
       }),
-      checkGuessAccuracy(),
+      checkGuessAccuracy()
+      answerWords = userGuess.value.split(" ")
+      console.log('Answer words:', answerWords)
+      
+
       userGuessPrime.value = ''
+
       console.log('Current guess list:', guessList, 'accuracy:', lastGuess.accuracy)
+
+
+
+
       }
 
       let checkGuessAccuracy = () => {
+
           // create promptWords array with each prompt word as an element
+          
       const promptWords = prompt.split(" ")
+      
           // get the previous guess in guessList array
+
       lastGuess = guessList[guessList.length - 1]
+
           // make the previous guess into an array to be checked against prompt words
+
       const lastGuessChecker = lastGuess.guess.split(" ")
+      
           // store the correct words
+
       correctWords = []
+
           // calculate guess accuracy percentage
+
       promptWords.forEach(word => {
         if (lastGuessChecker.includes(word)) {
           correctWords.push(word)
           if (!allCorrectWords.value.includes(word)){
           allCorrectWords.value.push(word)            
           }
-
         }
       })
+
       console.log('Prompt word array:', {promptWords}, 'Correct words:', {correctWords}),
       lastGuess.accuracy = (correctWords.length / promptWords.length) * 100
       checkDone()
@@ -104,9 +129,23 @@
       }
       console.log('Game state has been checked.');
       }  
-  
-  
-      // check the guess accuracy
+
+      
+    const answerStyles = (word) => {
+      if (correctWords.includes(word)) {
+      return {
+        color: 'green',
+        fontFamily: 'space-grotesk'
+      }
+    }
+    else {
+      return {
+        color: 'black',
+        fontFamily: 'space-grotesk'
+      }
+    }
+  }
+
 
 
   
@@ -141,5 +180,10 @@ a {
   width: fit-content;
   color: white;
   font-family: space-grotesk;
+}
+.inline {
+  display: inline;
+  margin-right: 10px; /* Add some margin for spacing between items */
+  width: fit-content;
 }
 </style>
