@@ -19,13 +19,13 @@
 
       </div>
   
-      <div class="guesses" v-for="answer in guessList" :key="answer">
+      <div class="guesses" v-for="(answer) in guessList" :key="answer">
         <!--This will display da guesses-->
         <div class="inline">Your guess:
-           <p class="inline" v-for="word in answerWords" :key="word" :style="answerStyles(word)">
+            <p class="inline" v-for="word in answer.guessWords" :key="word" :style="answerStyles(word)">
             {{ word }}
            </p>
-        | Accuracy: {{ answer.accuracy }}% 
+        | Accuracy: <span :style="styleAccuracy(answer)">{{ answer.accuracy }}%</span> 
         </div>
       </div>
   
@@ -61,12 +61,15 @@
     // Log user's guess => check if game is finished => check guess accuracy
   
     const handleGuess = () => {
+      answerWords = userGuess.value.split(" ")      
       guessList.push({
         guess: userGuess.value,
         accuracy: guessAccuracy.value,
+        guessWords: answerWords,
+        rightWords: correctWords
       }),
       checkGuessAccuracy()
-      answerWords = userGuess.value.split(" ")
+
       console.log('Answer words:', answerWords)
       
 
@@ -130,9 +133,16 @@
       console.log('Game state has been checked.');
       }  
 
-      
+    const styleAccuracy = (answer) => {
+    if (answer.accuracy > 80) {
+      return {
+        color: 'green'
+      }
+    }
+  }
+
     const answerStyles = (word) => {
-      if (correctWords.includes(word)) {
+      if (allCorrectWords.value.includes(word)) {
       return {
         color: 'green',
         fontFamily: 'space-grotesk'
@@ -144,7 +154,11 @@
         fontFamily: 'space-grotesk'
       }
     }
+
+
   }
+
+
 
 
 
