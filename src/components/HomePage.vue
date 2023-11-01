@@ -33,7 +33,8 @@
 
       <div class="dashboard">
         <div class="image">
-          <img src="../assets/walder.png" alt="">          
+          <img src="../assets/walder.png" alt="">     
+          <input class="input" placeholder="Guess the prompt!" @keyup.enter="handleGuess" v-model="userGuessPrime" :disabled="gameDone"/>          
         </div>
 
 
@@ -56,20 +57,18 @@
           </div>
       </div>
 
-      <div class="inputGroup" id="input">
-
-        <div v-if="won" style="background: green;"> You won, good job. Treat yourself to a cookie...</div>
-        <div v-if="lost" style="background: red;"> Uh oh, you hanged the man! Better luck in {{countdown}}...</div>
-
-        <input class="input" placeholder="Guess the prompt!" @keyup.enter="handleGuess" v-model="userGuessPrime" :disabled="gameDone"/>
-
-        <div class="input" id="promptReveal" v-if="gameDone">
-          <p>The right prompt was: <span style="color:rgb(54, 224, 61)">{{ prompt }}</span></p>
-        </div>
-
-      </div> 
-
     </div>
+    
+    <div class="inputGroup" id="input">
+
+      <div v-if="won" style="background: green;"> You won, good job. Treat yourself to a cookie...</div>
+      <div v-if="lost" style="background: red;"> Uh oh, you hanged the man! Better luck in {{countdown}}...</div>
+
+      <div class="input" id="promptReveal" v-if="gameDone">
+        <p>The right prompt was: <span style="color:rgb(54, 224, 61)">{{ prompt }}</span></p>
+      </div>
+
+    </div> 
   
     </div>
 
@@ -247,11 +246,12 @@ body {
   margin: 0;
   width: 100vw;
   height: 100vh;
-
+  overflow-x: hidden;
 }
 
 .page {
   display: flex;
+  flex: 1;
   width: 100vw;
   height: 100vh;
   flex-direction: column;
@@ -263,7 +263,8 @@ body {
 
 .navbar {
   display: flex;
-  padding: 0px 20px;
+  flex-direction: row;
+  padding: 0px 5vw;
   justify-content: space-between;
   align-items: center;
   align-self: stretch;
@@ -280,7 +281,6 @@ body {
 .navbar#footer{
   display: flex;
   justify-content: flex-end;
-  height: fit-content
 }
 
 /* timer */
@@ -310,8 +310,8 @@ body {
 
 .dashboard{
   display: flex;
-  padding: 25px 23px 31px 23px;
-  justify-content: center;
+  padding: 1vw 0vw;
+  justify-content: space-evenly;
   align-items: flex-start;
   align-content: flex-start;
   width: 100%;
@@ -324,8 +324,13 @@ body {
 /* img */
 
 .image {
-  height: 80%;
-  width: 80%;
+  height: fit-content;
+  width: fit-content;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2vh;
+
 }
 
 .image img {
@@ -341,7 +346,7 @@ body {
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  gap: 5%;
+  gap: 2vw;
   width: 90%;
   height: 80%;
   overflow: auto;
@@ -361,14 +366,13 @@ div.guess#container {
   background: white;
   overflow: visible;
   width: 90%;
-  padding: 0 17px;
   flex-wrap: nowrap;
   min-height: fit-content;
 }
 
 .guess {
   display: flex;
-  padding: 7px 18px;
+  padding: 0 1vw;
   justify-content: flex-start;
   align-items: center;
   width: 90%;
@@ -406,7 +410,7 @@ div.guess#container {
   gap: 10px;
   border-radius: 11px;
   height: fit-content;
-  width: 25%;
+  width: 80%;
   font-family: space-grotesk;
 }
 
@@ -470,39 +474,39 @@ div.guess#container {
 /* scrollbar */
 
 .container {
-            display: flex;
-            margin: 50px;
-            column-gap: 20px;
-        }
-        
-        .scrollbar {
-            height: 300px;
-            width: 50%;
-            overflow: auto;
-            padding: 0 10px;
-        }
+  display: flex;
+  margin: 50px;
+  column-gap: 20px;
+}
+
+.scrollbar {
+  height: 300px;
+  width: 50%;
+  overflow: auto;
+  padding: 0 10px;
+}
 
 .guessDiv::-webkit-scrollbar {
-            width: 12px;
-        }
+  width: 12px;
+}
         
 .guessDiv::-webkit-scrollbar-track {
-    border-radius: 8px;
-    background-color: #95a5a6;
-    border: 1px solid #cacaca;
+  border-radius: 8px;
+  background-color: #95a5a6;
+  border: 1px solid #cacaca;
 }
 
 .guessDiv::-webkit-scrollbar-thumb {
-    border-radius: 8px;
-    background-color: #2c3e50;
+  border-radius: 8px;
+  background-color: yellow;
 }
 
 /* media queries */
 
 @media (max-width: 426px) {
   .dashboard {
-    flex-wrap: wrap;
     flex-direction: column;
+    align-items: center;
   }
 
   .navbar {
@@ -510,7 +514,7 @@ div.guess#container {
   }
 
   .image img {
-    width: 100vw;
+    width: 80vw;
   }
 
   .modal#container{

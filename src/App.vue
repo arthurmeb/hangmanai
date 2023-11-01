@@ -21,6 +21,8 @@ export default {
   text-align: center;
   color: #ffffff;
   margin-top: 0;
+  display: flex;
+  flex-direction: column;
 }
 @font-face {
   font-family: 'space-grotesk';
