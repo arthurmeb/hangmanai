@@ -53,6 +53,10 @@
     </div>
 
       <div class="inputGroup" id="input">
+
+        <div v-if="won"> You won, good job. Treat yourself to a cookie...</div>
+        <div v-if="lost"> Better luck next tomorrow...</div>
+
         <input class="input" placeholder="Guess the prompt!" @keyup.enter="handleGuess" v-model="userGuessPrime" :disabled="gameDone"/>
         <div class="input" id="promptReveal" v-if="gameDone">
           <p>The right prompt was: {{ prompt }}</p>
@@ -75,7 +79,7 @@
   import { ref } from "vue"
 
 
-    const prompt = 'Walter White smoking it up dawggg'.toLowerCase()
+    const prompt = 'Walter White smoking it up dawggg uh nuh shluh wuh'.toLowerCase()
   
   
     let userGuessPrime = ref('')
@@ -148,15 +152,19 @@
       // check if game is done
 
     let gameDone = false
+    let won = false
+    let lost = false
 
     let checkDone = () => {
  
       if (guessList.length == 6)
       {
-        gameDone = true, console.log('Out of tries!')
+        gameDone = true
+        lost = true
         }
       else if (lastGuess.accuracy >= 80){
-        gameDone = true, console.log('You won!')
+        gameDone = true
+        won = true
       }
       console.log('Game state has been checked.');
       }  
@@ -203,7 +211,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  background-color: #204961;
+  background-color: #282424;
   margin: 0;
 }
 
@@ -215,7 +223,7 @@ body {
   align-items: flex-start;
 }
 
-/* Navbar */
+/* Navbar and footer */
 
 .navbar {
   display: flex;
@@ -224,11 +232,13 @@ body {
   align-items: center;
   align-self: stretch;
   height: fit-content;
-  font-family: 'space-grotesk', bold;
+  font-family: 'space-grotesk';
+  font-weight: bold;
 }
 
 .navbar p {
-  font-family: 'space-grotesk', light;
+  font-family: 'space-grotesk';
+  font-weight: lighter;
 }
 
 .navbar#footer{
@@ -247,6 +257,7 @@ body {
   gap: 10px;
   align-self: stretch;
   height: fit-content;
+  border: 1px solid white;
 }
 
 /* playground */
@@ -305,6 +316,7 @@ div.guess#hint {
   color: white;
   font-family: space-grotesk;
   justify-content: space-evenly;
+  margin-bottom: 1%;
 }
 
 div.guess#container {
@@ -326,7 +338,7 @@ div.guess#container {
   border-radius: 11px;
   background: #FFF;
   color: black;
-  gap: 2%;
+  gap: 1%;
   overflow: visible;
   flex-wrap: wrap;
   min-height: fit-content;
@@ -347,6 +359,7 @@ div.guess#container {
   gap: 37px;
   height: fit-content;
   width: 100%;
+  font-family: space-grotesk;
 }
 
 .input {
@@ -357,6 +370,7 @@ div.guess#container {
   border-radius: 11px;
   height: fit-content;
   width: 25%;
+  font-family: space-grotesk;
 }
 
 .input#promptReveal {
