@@ -345,7 +345,7 @@ body {
   padding: 2px 2px 0px 2px;
   flex-direction: column;
   justify-content: flex-start;
-  align-items: flex-start;
+  align-items: center;
   gap: 2vw;
   width: 90%;
   height: 80%;
@@ -379,7 +379,7 @@ div.guess#container {
   border-radius: 11px;
   background: #FFF;
   color: black;
-  gap: 1%;
+  gap: 0.5vw;
   overflow: visible;
   flex-wrap: wrap;
   min-height: fit-content;
