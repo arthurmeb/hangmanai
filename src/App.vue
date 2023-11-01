@@ -22,4 +22,30 @@ export default {
   color: #ffffff;
   margin-top: 0;
 }
+@font-face {
+  font-family: 'space-grotesk';
+  src: url('../public/fonts/SpaceGrotesk-Bold.ttf') format('truetype');
+  font-weight: bold;
+}
+@font-face {
+  font-family: 'space-grotesk';
+  src: url('../public/fonts/SpaceGrotesk-Light.ttf') format('truetype');
+  font-weight: light;
+}
+@font-face {
+  font-family: 'space-grotesk';
+  src: url('../public/fonts/SpaceGrotesk-Medium.ttf') format('truetype');
+  font-weight: medium;
+}
+@font-face {
+  font-family: 'space-grotesk';
+  src: url('../public/fonts/SpaceGrotesk-Regular.ttf') format('truetype');
+  font-weight: regular;
+}
+@font-face {
+  font-family: 'space-grotesk';
+  src: url('../public/fonts/SpaceGrotesk-SemiBold.ttf') format('truetype');
+  font-weight: semibold;
+}
+
 </style>
