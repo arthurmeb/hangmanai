@@ -153,7 +153,7 @@
       })
 
       console.log('Prompt word array:', {promptWords}, 'Correct words:', {correctWords}),
-      lastGuess.accuracy = (correctWords.length / promptWords.length) * 100
+      lastGuess.accuracy = Math.floor((correctWords.length / promptWords.length) * 100)
       checkDone()
     }
   
