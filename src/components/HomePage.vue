@@ -2,23 +2,29 @@
 
   <div class="page">
   
-  
     <div class="navbar">
-      <h1>Hanggman.ai</h1>
-      <p @onclick="toggleModal">How to play</p>
+      <h1>Hanggman</h1>
+      <p @click="toggleModal">How to play</p>
     </div>
 
-    <div style="background-color: grey;" @onclick="toggleModal" v-if="modalOpen">
-      <div class="modal">
-        <p> Hanggman is a simple game where you guess the prompt used to make the ai image!</p>
-        <p> The rules are you have 6 attempts</p>
-        <p> If you get over 80% over the words right on an attempt, you win. The correct prompt will also be revealed</p>
-        <p> If you use all 6 attempts without getting above 80% right on an answer, you lose.</p>
-        <p> Every correct word you've found so far will be displayed in the "your correct guesses" segment.</p>
-        <p> All your guesses will be displayed on the right. Correct words for that guess will be coloured green. Guess accuracy will also be shown.</p>
-        <p> Have fun, challenge a friend, follow me on Twitter!</p>
+    <div class="backdrop" @click.self="toggleModal" v-if="modalOpen">
+      <div class="modal" v-if="modalOpen">
+        <div style="width: 30em"> 
+          <h1> How to play </h1>
+          <p> Guess the prompt in 6 attempts.</p>
+          <p> Each attempt will show your correct words and accuracy.</p>
+          <img src="../assets/modal1.png" alt="" class="modalImg">
+          <p> All your correct words so far will be displayed. </p>
+          <img src="../assets/modal2.png" alt="" class="modalImg">
+          <p> The prompt will be revealed when the game is done.</p>
+          <img src="../assets/modal3.png" alt="" class="modalImg">
+          <p> Score over 80% on any guess to win </p>
+          <p> Have fun, challenge a friend, follow me on Twitter!</p>
+          <button @click="toggleModal"> I understand! </button>          
+        </div>
       </div>
     </div>  
+
     <div class="playground">
 
       <div class="timer">
@@ -33,7 +39,7 @@
 
         <div class="guessDiv">
 
-          <div class="guess"> Your correct words:
+          <div class="guess"> <p> Your correct words:</p>
             <div class="guess" id="hint" v-for="word in allCorrectWords" :key="word">
                {{ word }}
             </div>
@@ -55,11 +61,11 @@
       <div class="inputGroup" id="input">
 
         <div v-if="won"> You won, good job. Treat yourself to a cookie...</div>
-        <div v-if="lost"> Better luck next tomorrow...</div>
+        <div v-if="lost"> Uh oh, you hanged the man! Better luck tomorrow...</div>
 
         <input class="input" placeholder="Guess the prompt!" @keyup.enter="handleGuess" v-model="userGuessPrime" :disabled="gameDone"/>
         <div class="input" id="promptReveal" v-if="gameDone">
-          <p>The right prompt was: {{ prompt }}</p>
+          <p>The right prompt was: <span style="color:rgb(54, 224, 61)">{{ prompt }}</span></p>
         </div>
       </div> 
 
@@ -78,8 +84,11 @@
   import { computed} from "vue";
   import { ref } from "vue"
 
+    let modalOpen = ref(false)
+    let toggleModal = () => {modalOpen.value = !modalOpen.value, console.log('get toggled', modalOpen)}
 
-    const prompt = 'Walter White smoking it up dawggg uh nuh shluh wuh'.toLowerCase()
+
+    const prompt = 'Walter White in shades smoking a cigarette'.toLowerCase()
   
   
     let userGuessPrime = ref('')
@@ -193,11 +202,7 @@
 
 
   }
-
-  let modalOpen = ref(false)
-  const toggleModal = () => {modalOpen.value = !modalOpen.value, console.log('get toggled')}
-  
-    console.log('User guess:', userGuess, 'Guess list:', guessList )
+ 
 
 
 </script>
@@ -306,7 +311,7 @@ body {
   align-items: flex-start;
   gap: 5%;
   width: 90%;
-  height: 75%;
+  height: 80%;
   overflow: auto;
 }
 
@@ -324,14 +329,14 @@ div.guess#container {
   background: white;
   overflow: visible;
   width: 90%;
-  padding: 0 10px;
+  padding: 0 17px;
   flex-wrap: nowrap;
   min-height: fit-content;
 }
 
 .guess {
   display: flex;
-  padding: 13px 18px;
+  padding: 7px 18px;
   justify-content: flex-start;
   align-items: center;
   width: 90%;
@@ -384,14 +389,48 @@ div.guess#container {
 
 /* Modal */
 
+.backdrop {
+  display: block; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
 .modal {
-  background: white;
+  background-color: #fefefe;
+  display: flex;
+  flex-direction: column;
+  margin: 5% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border-radius: 11px;
+  width: fit-content; /* Could be more or less, depending on screen size */
+  color: black;
+  align-items: center;
 }
 
-.background {
-  background: white;
+.modal button {
+  border-radius: 11px;
+  background-color: green;
+  color: white;
+  border: transparent;
+  font-family: space-grotesk;
 }
 
+.modalImg {
+  height: 100%;
+  width: 90%;
+}
+
+.modal p{
+  width:fit-content;
+}
 /* scrollbar */
 
 .container {
