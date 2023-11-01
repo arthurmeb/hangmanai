@@ -5,7 +5,7 @@
   
     <div class="navbar">
       <h1>Hanggman.ai</h1>
-      <h4 @onclick="toggleModal">How to play</h4>
+      <p @onclick="toggleModal">How to play</p>
     </div>
 
     <div style="background-color: grey;" @onclick="toggleModal" v-if="modalOpen">
@@ -33,7 +33,7 @@
 
         <div class="guessDiv">
 
-          <div class="guess"> Your right words:
+          <div class="guess"> Your correct words:
             <div class="guess" id="hint" v-for="word in allCorrectWords" :key="word">
                {{ word }}
             </div>
@@ -54,8 +54,8 @@
 
       <div class="inputGroup" id="input">
         <input class="input" placeholder="Guess the prompt!" @keyup.enter="handleGuess" v-model="userGuessPrime" :disabled="gameDone"/>
-        <div class="guess" v-if="gameDone">
-          <p>The right prompt was {{ prompt }}</p>
+        <div class="input" id="promptReveal" v-if="gameDone">
+          <p>The right prompt was: {{ prompt }}</p>
         </div>
       </div> 
 
@@ -172,7 +172,7 @@
     const answerStyles = (word) => {
       if (allCorrectWords.value.includes(word)) {
       return {
-        color: 'green',
+        color: '#36E03D',
         fontFamily: 'space-grotesk'
       }
     }
@@ -219,11 +219,16 @@ body {
 
 .navbar {
   display: flex;
-  padding: 0px 0px;
+  padding: 0px 20px;
   justify-content: space-between;
   align-items: center;
   align-self: stretch;
   height: fit-content;
+  font-family: 'space-grotesk', bold;
+}
+
+.navbar p {
+  font-family: 'space-grotesk', light;
 }
 
 .navbar#footer{
@@ -284,35 +289,14 @@ body {
 
 .guessDiv {
   display: flex;
-  padding: 33px 44px 33px 10px;
+  padding: 2px 2px 0px 2px;
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  gap: 30px;
+  gap: 5%;
   width: 90%;
-  max-height: 75%;
+  height: 75%;
   overflow: auto;
-}
-
-.inputGroup {
-  display: flex;
-  padding: 27px 106px;
-  flex-direction: column;
-  align-items: center;
-  gap: 37px;
-  height: fit-content;
-}
-
-.input {
-  display: flex;
-  padding: 27px 106px;
-  flex-direction: column;
-  align-items: center;
-  gap: 37px;
-  border-radius: 11px;
-  background: #FFF;
-  max-width: 80%;
-  height: fit-content;
 }
 
 div.guess#hint {
@@ -326,8 +310,11 @@ div.guess#hint {
 div.guess#container {
   justify-content: space-between;
   background: white;
-  overflow: hidden;
-  width: 100%;
+  overflow: visible;
+  width: 90%;
+  padding: 0 10px;
+  flex-wrap: nowrap;
+  min-height: fit-content;
 }
 
 .guess {
@@ -335,14 +322,14 @@ div.guess#container {
   padding: 13px 18px;
   justify-content: flex-start;
   align-items: center;
-  max-width: 100%;
-  width: 100%;
-  height: fit-content;
+  width: 90%;
   border-radius: 11px;
   background: #FFF;
   color: black;
   gap: 2%;
-  overflow: hidden;
+  overflow: visible;
+  flex-wrap: wrap;
+  min-height: fit-content;
 }
 
 .guess p {
@@ -350,13 +337,34 @@ div.guess#container {
   word-wrap: break-word; /* Enable word wrap for long words */
 }
 
-.promptReveal {
+/* Input and reveal */
+
+.inputGroup {
+  display: flex;
+  padding: 27px 0px;
+  flex-direction: column;
+  align-items: center;
+  gap: 37px;
+  height: fit-content;
+  width: 100%;
+}
+
+.input {
   display: flex;
   padding: 13px 18px;
-  justify-content: center;
   align-items: center;
-  gap: 204px;
-  color: white;
+  gap: 10px;
+  border-radius: 11px;
+  height: fit-content;
+  width: 25%;
+}
+
+.input#promptReveal {
+  width: 40%;
+  background: white;
+  color: black;
+  font: inherit;
+  justify-content: center;
 }
 
 
@@ -365,4 +373,39 @@ div.guess#container {
 .modal {
   background: white;
 }
+
+.background {
+  background: white;
+}
+
+/* scrollbar */
+
+.container {
+            display: flex;
+            margin: 50px;
+            column-gap: 20px;
+        }
+        
+        .scrollbar {
+            height: 300px;
+            width: 50%;
+            overflow: auto;
+            padding: 0 10px;
+        }
+
+.guessDiv::-webkit-scrollbar {
+            width: 12px;
+        }
+        
+.guessDiv::-webkit-scrollbar-track {
+    border-radius: 8px;
+    background-color: #95a5a6;
+    border: 1px solid #cacaca;
+}
+
+.guessDiv::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    background-color: #2c3e50;
+}
+
 </style>
