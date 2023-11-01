@@ -9,7 +9,7 @@
 
     <div class="backdrop" @click.self="toggleModal" v-if="modalOpen">
       <div class="modal" v-if="modalOpen">
-        <div style="width: 30em"> 
+        <div class="modal" id="container"> 
           <h1> How to play </h1>
           <p> Guess the prompt in 6 attempts.</p>
           <p> Each attempt will show your correct words and accuracy.</p>
@@ -32,7 +32,7 @@
       </div>
 
       <div class="dashboard">
-        <div class="img">
+        <div class="image">
           <img src="../assets/walder.png" alt="">          
         </div>
 
@@ -56,19 +56,20 @@
           </div>
       </div>
 
-    </div>
-
       <div class="inputGroup" id="input">
 
-        <div v-if="won"> You won, good job. Treat yourself to a cookie...</div>
-        <div v-if="lost"> Uh oh, you hanged the man! Better luck tomorrow...</div>
+        <div v-if="won" style="background: green;"> You won, good job. Treat yourself to a cookie...</div>
+        <div v-if="lost" style="background: red;"> Uh oh, you hanged the man! Better luck in {{countdown}}...</div>
 
         <input class="input" placeholder="Guess the prompt!" @keyup.enter="handleGuess" v-model="userGuessPrime" :disabled="gameDone"/>
+
         <div class="input" id="promptReveal" v-if="gameDone">
           <p>The right prompt was: <span style="color:rgb(54, 224, 61)">{{ prompt }}</span></p>
         </div>
+
       </div> 
 
+    </div>
   
     </div>
 
@@ -241,17 +242,21 @@ onMounted(() => {
 body {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: stretch;
   background-color: #282424;
   margin: 0;
+  width: 100vw;
+  height: 100vh;
+
 }
 
 .page {
   display: flex;
-  width: 1440px;
-  height: 1024px;
+  width: 100vw;
+  height: 100vh;
   flex-direction: column;
   align-items: flex-start;
+  overflow-x: hidden;
 }
 
 /* Navbar and footer */
@@ -289,6 +294,7 @@ body {
   align-self: stretch;
   height: fit-content;
   border: 1px solid white;
+  margin: 0.2rem;
 }
 
 /* playground */
@@ -317,14 +323,14 @@ body {
 
 /* img */
 
-.img {
+.image {
   height: 80%;
   width: 80%;
 }
 
-.img img {
-  height: 100%;
-  width: 100%;
+.image img {
+  height: fit-content;
+  width: 40vw;
 }
 
       /* guesses */
@@ -441,6 +447,10 @@ div.guess#container {
   align-items: center;
 }
 
+.modal#container {
+  width: 30rem;
+}
+
 .modal button {
   border-radius: 11px;
   background-color: green;
@@ -487,4 +497,42 @@ div.guess#container {
     background-color: #2c3e50;
 }
 
+/* media queries */
+
+@media (max-width: 426px) {
+  .dashboard {
+    flex-wrap: wrap;
+    flex-direction: column;
+  }
+
+  .navbar {
+    font-size:x-small
+  }
+
+  .image img {
+    width: 100vw;
+  }
+
+  .modal#container{
+    width: 70vw;
+    height: fit-content;
+    font-size: small;
+  }
+
+}
+
+@media (min-width: 2440px) {
+  .image img {
+    width: 50vw;
+  }
+
+  .modal#container{
+    width: 50vw;
+    height: 70vw;
+    font-size: 2vw;
+  }
+
+
+  
+}
 </style>
