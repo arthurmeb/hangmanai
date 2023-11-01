@@ -28,7 +28,7 @@
     <div class="playground">
 
       <div class="timer">
-        <h1>NEXT IMAGE IN: 23:43:20...</h1>
+        <h1>NEXT IMAGE IN: {{ countdown }}</h1>
       </div>
 
       <div class="dashboard">
@@ -81,7 +81,7 @@
   
   
   <script setup>
-  import { computed} from "vue";
+  import { computed, onMounted} from "vue";
   import { ref } from "vue"
 
     let modalOpen = ref(false)
@@ -203,6 +203,32 @@
 
   }
  
+const countdown = ref('');
+const updateCountdown = () => {
+  const now = new Date();
+  const targetTime = new Date();
+
+  // Set the target time to midnight GMT+0
+  targetTime.setUTCHours(24, 0, 0, 0);
+
+  // Calculate the time difference (in milliseconds) between now and midnight GMT+0
+  const timeDiff = targetTime - now;
+
+  // Calculate hours, minutes, and seconds from the time difference
+  const hours = Math.floor(timeDiff / (1000 * 60 * 60));
+  const minutes = Math.floor((timeDiff / (1000 * 60)) % 60);
+  const seconds = Math.floor((timeDiff / 1000) % 60);
+
+  // Format the countdown string
+  countdown.value = `${hours} hours ${minutes} minutes ${seconds} seconds`;
+};
+
+// Call updateCountdown when the component is mounted
+onMounted(() => {
+  updateCountdown();
+  // Update the countdown every second
+  setInterval(updateCountdown, 1000);
+});
 
 
 </script>
