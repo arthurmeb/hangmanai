@@ -13,7 +13,7 @@ const images = [
     {image: 'src\assets\promptImages\x012heisenberg.png', lePrompt: 'walter white and heisenberg in the lab cooking', day: 12},
     {image: 'src\assets\promptImages\x013frank.png', lePrompt: 'new frank ocean album cover', day: 13},
     {image: 'src\assets\promptImages\x014bread.png', lePrompt: 'a group of people try to get a man out of a loaf of bread', day: 14},
-    {image: 'src\assets\promptImages\15queen.png', lePrompt: 'the asian queen with a crown of beautiful ornate jewels and beads', day: 15},
+    {image: 'src\assets\promptImages\x015queen.png', lePrompt: 'the asian queen with a crown of beautiful ornate jewels and beads', day: 15},
     {image: 'src\assets\promptImages\x016poacher.png', lePrompt: 'the evil poachers in hazmat suits with glowing eyes purple theme and hue', day: 16},
     {image: 'src\assets\promptImages\x017field.png', lePrompt: 'the postman in the ethereal vast red field', day: 17},
     {image: 'src\assets\promptImages\x018minion.png', lePrompt: 'stuart the minion sat in a submarine smoking a pipe', day: 18},
