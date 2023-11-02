@@ -64,8 +64,25 @@
       <div v-if="won" style="background: green;"> You won, good job. Treat yourself to a cookie...</div>
       <div v-if="lost" style="background: red;"> Uh oh, you hanged the man! Better luck in {{countdown}}...</div>
 
+
+
       <div class="input" id="promptReveal" v-if="gameDone">
-        <p>The right prompt was: <span style="color:rgb(54, 224, 61)">{{ index.lePrompt }}</span></p>
+
+        <p>The right prompt was: <span style="color:rgb(54, 224, 61)"> {{ index.lePrompt }}</span></p>
+
+              <!-- Results sharing vector -->
+        <div class="input" id="resultsDisplay" v-for="item in allGuesses" :key="item">
+
+          <div v-for="word in item.guessString" :key="word">
+            <span v-if="splitPrompt.includes(word)"> 🟩 <span> {{ word }} </span> </span>
+              <span v-else>⬜ {{ item.accuracy }} <span> {{ word }} </span> </span> 
+          </div>
+
+
+
+        </div>
+          <p> Hanggman #{{ index.day }}</p>
+          <button> Share! </button>
       </div>
 
     </div> 
@@ -173,6 +190,8 @@ console.log(promptDay)
     let correctWords
     let allCorrectWords = ref([])
     let answerWords
+    let allGuesses = ref([])
+    let splitPrompt = ref()
 
     // Log user's guess => check if game is finished => check guess accuracy
 
@@ -186,6 +205,10 @@ console.log(promptDay)
         guessWords: answerWords,
         rightWords: correctWords
       }),
+      allGuesses.value.push({
+        guessString: answerWords,
+        accuracy: guessAccuracy.value 
+      })
               // run function to check guess's accuracy
       checkGuessAccuracy()
 
@@ -205,6 +228,7 @@ console.log(promptDay)
           // create promptWords array with each prompt word as an element
           
       const promptWords = prompt.split(" ")
+      splitPrompt.value = promptWords
       
           // get the previous guess in guessList array
 
@@ -227,6 +251,7 @@ console.log(promptDay)
           allCorrectWords.value.push(word)            
           }
         }
+
       })
 
       console.log('Prompt word array:', {promptWords}, 'Correct words:', {correctWords}),
@@ -475,6 +500,17 @@ div.guess#container {
   color: black;
   font: inherit;
   justify-content: center;
+  flex-direction: row;
+  gap: 2vh;
+  overflow: hidden;
+  flex-wrap: wrap;
+}
+
+.input#resultsDisplay {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
 }
 
 
@@ -577,6 +613,10 @@ div.guess#container {
     height: fit-content;
     font-size: small;
   }
+
+  .input#promptReveal {
+  width: 80vw;
+}
 
 }
 
