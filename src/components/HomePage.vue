@@ -74,11 +74,12 @@
         <div class="input" id="resultsDisplay" v-for="item in allGuesses" :key="item">
 
           <div v-for="word in item.guessString" :key="word">
-            <span v-if="splitPrompt.includes(word)"> 🟩 <span> {{ word }} </span> </span>
-              <span v-else>⬜ {{ item.accuracy }} <span> {{ word }} </span> </span> 
+            <span v-if="splitPrompt.includes(word)"> 🟩</span>
+              <span v-else> ⬜</span> 
           </div>
 
-
+          <p> {{item.leaccuracy}} % </p>
+          
 
         </div>
           <p> Hanggman #{{ index.day }}</p>
@@ -204,11 +205,8 @@ console.log(promptDay)
         accuracy: guessAccuracy.value,
         guessWords: answerWords,
         rightWords: correctWords
-      }),
-      allGuesses.value.push({
-        guessString: answerWords,
-        accuracy: guessAccuracy.value 
       })
+
               // run function to check guess's accuracy
       checkGuessAccuracy()
 
@@ -259,6 +257,13 @@ console.log(promptDay)
       lastGuess.accuracy = Math.floor((correctWords.length / promptWords.length) * 100)
           // Run function to check if game is over or not
       checkDone()
+
+      allGuesses.value.push({
+        guessString: answerWords,
+        leaccuracy: lastGuess.accuracy 
+      })
+
+      console.log('le acuracy', allGuesses.value.leaccuracy)
     }
   
 
@@ -270,15 +275,15 @@ console.log(promptDay)
 
     let checkDone = () => {
             // If 6 guesses are used,  end game and lose
-      if (guessList.length == 6)
+      if (lastGuess.accuracy >= 80){
+        gameDone = true
+        won = true
+        }
+            // If guess accuracy over 80%, end game and win
+      else if (guessList.length == 6)
       {
         gameDone = true
         lost = true
-        }
-            // If guess accuracy over 80%, end game and win
-      else if (lastGuess.accuracy >= 80){
-        gameDone = true
-        won = true
       }
       console.log('Game state has been checked.');
       }  
@@ -500,7 +505,7 @@ div.guess#container {
   color: black;
   font: inherit;
   justify-content: center;
-  flex-direction: row;
+  flex-direction: column;
   gap: 2vh;
   overflow: hidden;
   flex-wrap: wrap;
@@ -509,7 +514,7 @@ div.guess#container {
 .input#resultsDisplay {
   display: flex;
   flex-direction: row;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   justify-content: center;
 }
 
