@@ -83,15 +83,51 @@
   <script setup>
   import { computed, onMounted} from "vue";
   import { ref } from "vue"
+  import images from './assets/images.js'
+
+  // Modal toggling 
 
     let modalOpen = ref(false)
     let toggleModal = () => {modalOpen.value = !modalOpen.value, console.log('get toggled', modalOpen)}
 
+    // Countdown timer and prompt cycling
 
+    const countdown = ref('');
+    const updateCountdown = () => {
+    const now = new Date();
+    const targetTime = new Date();
+
+        // Set the target time to midnight GMT+0
+    targetTime.setUTCHours(24, 0, 0, 0);
+
+        // Calculate the time difference (in milliseconds) between now and midnight GMT+0
+    const timeDiff = targetTime - now;
+
+        // Calculate hours, minutes, and seconds from the time difference
+    const hours = Math.floor(timeDiff / (1000 * 60 * 60));
+    const minutes = Math.floor((timeDiff / (1000 * 60)) % 60);
+    const seconds = Math.floor((timeDiff / 1000) % 60);
+
+        // Format the countdown string
+    countdown.value = `${hours} hours ${minutes} minutes ${seconds} seconds`;
+  };
+
+        // Call updateCountdown when the component is mounted
+  onMounted(() => {
+    updateCountdown();
+        // Update the countdown every second
+    setInterval(updateCountdown, 1000);
+  });
+
+  // Prompt cycling
+
+    prompt loop
     const prompt = 'grandwizards in shades sat in a room smoking'.toLowerCase()
   
-  
+   // USER GUESS AND ACCURACY LOGIC
+
     let userGuessPrime = ref('')
+              // make user's guess lowercase and strip punctuation
     let userGuess = computed(()=>userGuessPrime.value.toLowerCase().replace(/[.,/#!$%^&*;:{}=_`~()'"?]/g, ""))
     let guessList = []
     let guessAccuracy = ref(null)
@@ -99,8 +135,11 @@
     let correctWords
     let allCorrectWords = ref([])
     let answerWords
+
     // Log user's guess => check if game is finished => check guess accuracy
-  
+
+            // when user presses enter, log their guess with its accuracy to guessList
+
     const handleGuess = () => {
       answerWords = userGuess.value.split(" ")      
       guessList.push({
@@ -109,19 +148,19 @@
         guessWords: answerWords,
         rightWords: correctWords
       }),
+              // run function to check guess's accuracy
       checkGuessAccuracy()
 
       console.log('Answer words:', answerWords)
       
-
+            // reset user input to empty for next guess
       userGuessPrime.value = ''
 
       console.log('Current guess list:', guessList, 'accuracy:', lastGuess.accuracy)
 
-
-
-
       }
+      
+      // Check guess accuracy function
 
       let checkGuessAccuracy = () => {
 
@@ -133,7 +172,7 @@
 
       lastGuess = guessList[guessList.length - 1]
 
-          // make the previous guess into an array to be checked against prompt words
+          // make the user's previous guess into an array to be checked against prompt words
 
       const lastGuessChecker = lastGuess.guess.split(" ")
       
@@ -141,7 +180,7 @@
 
       correctWords = []
 
-          // calculate guess accuracy percentage
+          // Push correct words from lastGuessChecker to correctWords and allCorrectWords list
 
       promptWords.forEach(word => {
         if (lastGuessChecker.includes(word)) {
@@ -153,7 +192,9 @@
       })
 
       console.log('Prompt word array:', {promptWords}, 'Correct words:', {correctWords}),
+          // Round last guess accuracy to whole
       lastGuess.accuracy = Math.floor((correctWords.length / promptWords.length) * 100)
+          // Run function to check if game is over or not
       checkDone()
     }
   
@@ -165,12 +206,13 @@
     let lost = false
 
     let checkDone = () => {
- 
+            // If 6 guesses are used,  end game and lose
       if (guessList.length == 6)
       {
         gameDone = true
         lost = true
         }
+            // If guess accuracy over 80%, end game and win
       else if (lastGuess.accuracy >= 80){
         gameDone = true
         won = true
@@ -178,6 +220,7 @@
       console.log('Game state has been checked.');
       }  
 
+      // Style guess accuracy percentage to green if they are correct
     const styleAccuracy = (answer) => {
     if (answer.accuracy > 80) {
       return {
@@ -185,7 +228,7 @@
       }
     }
   }
-
+      // If word is correct, style it green. Else style black
     const answerStyles = (word) => {
       if (allCorrectWords.value.includes(word)) {
       return {
@@ -203,33 +246,6 @@
 
   }
  
-const countdown = ref('');
-const updateCountdown = () => {
-  const now = new Date();
-  const targetTime = new Date();
-
-  // Set the target time to midnight GMT+0
-  targetTime.setUTCHours(24, 0, 0, 0);
-
-  // Calculate the time difference (in milliseconds) between now and midnight GMT+0
-  const timeDiff = targetTime - now;
-
-  // Calculate hours, minutes, and seconds from the time difference
-  const hours = Math.floor(timeDiff / (1000 * 60 * 60));
-  const minutes = Math.floor((timeDiff / (1000 * 60)) % 60);
-  const seconds = Math.floor((timeDiff / 1000) % 60);
-
-  // Format the countdown string
-  countdown.value = `${hours} hours ${minutes} minutes ${seconds} seconds`;
-};
-
-// Call updateCountdown when the component is mounted
-onMounted(() => {
-  updateCountdown();
-  // Update the countdown every second
-  setInterval(updateCountdown, 1000);
-});
-
 
 </script>
 
