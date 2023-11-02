@@ -88,7 +88,7 @@
     let toggleModal = () => {modalOpen.value = !modalOpen.value, console.log('get toggled', modalOpen)}
 
 
-    const prompt = 'Walter White in shades smoking a cigarette'.toLowerCase()
+    const prompt = 'grandwizards in shades sat in a room smoking'.toLowerCase()
   
   
     let userGuessPrime = ref('')
