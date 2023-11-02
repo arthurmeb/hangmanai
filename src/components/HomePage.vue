@@ -96,7 +96,9 @@
     let now
     let targetTime
 
+      // Function starts
     const updateCountdown = () => {
+
     now = new Date();
     targetTime = new Date();
 
@@ -113,6 +115,8 @@
 
         // Format the countdown string
     countdown.value = `${hours} hours ${minutes} minutes ${seconds} seconds`;
+
+    return {timeDiff}
   };
   // Prompt cycling
 
@@ -122,36 +126,38 @@
   let promptDay
   let currentIndex = 0;
   const promptLoop = () => {
-    if (now == now) {
+
+    const { timeDiff } = updateCountdown();  
+          // if timediff = 0 (current time is gmt +0), increment index to go to next image
+    if (timeDiff == 1) {
       // Increment the index value
       currentIndex++;
-      index.value = images[currentIndex];
-
-      prompt = index.value.lePrompt
-      promptImg = index.value.image
-      promptDay = index.value.day
-      console.log('IMAGE AND DAY:', promptImg, promptDay)  
     }
+          // else stay on same image
     else {
-      index.value = images[0]
+      index.value = images[currentIndex]
       prompt = index.value.lePrompt
       promptImg = index.value.image
       promptDay = index.value.day 
-      console.log('IMAGE AND DAY:', promptImg, promptDay)  
     }
   }
 
+console.log(promptDay)
 
+        // Call updateCountdown when the component is mounted and call promptLoop when conditions are met
 
-        // Call updateCountdown when the component is mounted
   onMounted(() => {
-    updateCountdown();
-    setInterval(function() {
-      promptLoop();
-      console.log('Prompt looped');
-    }, 5000);
-        // Update the countdown every second
-    setInterval(updateCountdown, 1000);
+
+    const { timeDiff } = updateCountdown();   
+    promptLoop(timeDiff) 
+
+        // Update the countdown and check promptLoop every second
+    setInterval(() => {
+    const { timeDiff } = updateCountdown();
+    updateCountdown()
+    promptLoop(timeDiff)
+    }, 
+    1000);
   });
 
 
