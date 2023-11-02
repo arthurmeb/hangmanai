@@ -372,6 +372,7 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 2vh;
+  margin-left: 2vw;
 
 }
 
