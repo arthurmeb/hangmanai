@@ -120,14 +120,17 @@
   let prompt
   let promptImg
   let promptDay
-
+  let currentIndex = 0;
   const promptLoop = () => {
-    if (now == targetTime) {
-      index.value = images[0]
-      index.value++
+    if (now == now) {
+      // Increment the index value
+      currentIndex++;
+      index.value = images[currentIndex];
+
       prompt = index.value.lePrompt
       promptImg = index.value.image
       promptDay = index.value.day
+      console.log('IMAGE AND DAY:', promptImg, promptDay)  
     }
     else {
       index.value = images[0]
@@ -143,7 +146,10 @@
         // Call updateCountdown when the component is mounted
   onMounted(() => {
     updateCountdown();
-    promptLoop();
+    setInterval(function() {
+      promptLoop();
+      console.log('Prompt looped');
+    }, 5000);
         // Update the countdown every second
     setInterval(updateCountdown, 1000);
   });
