@@ -33,7 +33,7 @@
 
       <div class="dashboard">
         <div class="image">
-          <img src="../assets/walder.png" alt="">     
+          <img :src="promptImg" alt="">     
           <input class="input" placeholder="Guess the prompt!" @keyup.enter="handleGuess" v-model="userGuessPrime" :disabled="gameDone"/>          
         </div>
 
@@ -65,7 +65,7 @@
       <div v-if="lost" style="background: red;"> Uh oh, you hanged the man! Better luck in {{countdown}}...</div>
 
       <div class="input" id="promptReveal" v-if="gameDone">
-        <p>The right prompt was: <span style="color:rgb(54, 224, 61)">{{ prompt }}</span></p>
+        <p>The right prompt was: <span style="color:rgb(54, 224, 61)">{{ index.lePrompt }}</span></p>
       </div>
 
     </div> 
@@ -83,7 +83,7 @@
   <script setup>
   import { computed, onMounted} from "vue";
   import { ref } from "vue"
-  import images from './assets/images.js'
+  import {images} from '../assets/imagesCycle.js'
 
   // Modal toggling 
 
@@ -93,9 +93,12 @@
     // Countdown timer and prompt cycling
 
     const countdown = ref('');
+    let now
+    let targetTime
+
     const updateCountdown = () => {
-    const now = new Date();
-    const targetTime = new Date();
+    now = new Date();
+    targetTime = new Date();
 
         // Set the target time to midnight GMT+0
     targetTime.setUTCHours(24, 0, 0, 0);
@@ -111,18 +114,41 @@
         // Format the countdown string
     countdown.value = `${hours} hours ${minutes} minutes ${seconds} seconds`;
   };
+  // Prompt cycling
+
+  let index = ref()
+  let prompt
+  let promptImg
+  let promptDay
+
+  const promptLoop = () => {
+    if (now == targetTime) {
+      index.value = images[0]
+      index.value++
+      prompt = index.value.lePrompt
+      promptImg = index.value.image
+      promptDay = index.value.day
+    }
+    else {
+      index.value = images[0]
+      prompt = index.value.lePrompt
+      promptImg = index.value.image
+      promptDay = index.value.day 
+      console.log('IMAGE AND DAY:', promptImg, promptDay)  
+    }
+  }
+
+
 
         // Call updateCountdown when the component is mounted
   onMounted(() => {
     updateCountdown();
+    promptLoop();
         // Update the countdown every second
     setInterval(updateCountdown, 1000);
   });
 
-  // Prompt cycling
 
-    prompt loop
-    const prompt = 'grandwizards in shades sat in a room smoking'.toLowerCase()
   
    // USER GUESS AND ACCURACY LOGIC
 
