@@ -92,7 +92,7 @@
   
   
     let userGuessPrime = ref('')
-    let userGuess = computed(()=>userGuessPrime.value.toLowerCase())
+    let userGuess = computed(()=>userGuessPrime.value.toLowerCase().replace(/[.,/#!$%^&*;:{}=_`~()'"?]/g, ""))
     let guessList = []
     let guessAccuracy = ref(null)
     let lastGuess
