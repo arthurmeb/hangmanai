@@ -33,7 +33,7 @@
 
       <div class="dashboard">
         <div class="image">
-          <img :src="promptImg" alt="">     
+          <img :src="daily.image" alt="">     
           <input class="input" placeholder="Guess the prompt!" @keyup.enter="handleGuess" v-model="userGuessPrime" :disabled="gameDone"/>          
         </div>
 
@@ -68,7 +68,7 @@
 
       <div class="input" id="promptReveal" v-if="gameDone">
 
-        <p>The right prompt was: <span style="color:rgb(54, 224, 61)"> {{ index.lePrompt }}</span></p>
+        <p>The right prompt was: <span style="color:rgb(54, 224, 61)"> {{ daily.lePrompt }}</span></p>
 
               <!-- Results sharing vector -->
         <div class="input" id="resultsDisplay" v-for="item in allGuesses" :key="item">
@@ -82,7 +82,7 @@
           
 
         </div>
-          <p> Hanggman #{{ index.day }}</p>
+          <p> Hanggman #{{ daily.day }}</p>
           <button> Share! </button>
       </div>
 
@@ -101,7 +101,9 @@
   <script setup>
   import { computed, onMounted} from "vue";
   import { ref } from "vue"
-  import {images} from '../assets/imagesCycle.js'
+
+  import axios from "axios";
+
 
   // Modal toggling 
 
@@ -133,49 +135,34 @@
 
         // Format the countdown string
     countdown.value = `${hours} hours ${minutes} minutes ${seconds} seconds`;
-
-    return {timeDiff}
   };
-  // Prompt cycling
 
-  let index = ref()
-  let prompt
-  let promptImg
-  let promptDay
-  let currentIndex = 0;
-  const promptLoop = () => {
 
-    const { timeDiff } = updateCountdown();  
-          // if timediff = 0 (current time is gmt +0), increment index to go to next image
-    if (timeDiff == 1) {
-      // Increment the index value
-      currentIndex++;
-    }
-          // else stay on same image
-    else {
-      index.value = images[currentIndex]
-      prompt = index.value.lePrompt
-      promptImg = index.value.image
-      promptDay = index.value.day 
-    }
-  }
-
-console.log(promptDay)
 
         // Call updateCountdown when the component is mounted and call promptLoop when conditions are met
 
+  let daily = ref('Loading')
+
   onMounted(() => {
 
-    const { timeDiff } = updateCountdown();   
-    promptLoop(timeDiff) 
-
-        // Update the countdown and check promptLoop every second
+        // Update the countdown every second
     setInterval(() => {
-    const { timeDiff } = updateCountdown();
     updateCountdown()
-    promptLoop(timeDiff)
     }, 
     1000);
+
+    axios
+      .get("http://localhost:3000/api/daily")
+      .then((response) => {
+        console.log("Daily data:", response.data);
+        daily.value = response.data
+        return {daily}
+
+      })
+      .catch((error) => {
+        // Handle errors here
+        console.error("Error fetching daily data:", error);
+      });
   });
 
 
@@ -225,7 +212,7 @@ console.log(promptDay)
 
           // create promptWords array with each prompt word as an element
           
-      const promptWords = prompt.split(" ")
+      const promptWords = daily.value.lePrompt.split(" ")
       splitPrompt.value = promptWords
       
           // get the previous guess in guessList array
