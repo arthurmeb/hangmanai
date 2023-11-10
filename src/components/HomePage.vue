@@ -110,10 +110,10 @@
   socket.on('connect', () => {
     console.log('Connected to server');
 });
-  socket.on('dailyUpdated', (newDaily) => {
+  socket.on('dailyUpdated', (jsonString) => {
     // Do something with the updated daily data
-    console.log('Received updated daily:', newDaily);
-    daily.value = newDaily
+    console.log('Received updated daily:', jsonString);
+    daily.value = jsonString
 });
 
   socket.on('idk', (jsonDaily) => {
@@ -160,12 +160,6 @@
 
 
         // Call updateCountdown when the component is mounted and call promptLoop when conditions are met
-
-    socket.on('dayOne', (currentDaily) => {
-      // Do something with the updated daily data
-      console.log('Received first ever daily.', currentDaily);
-      daily.value = currentDaily
-  });
 
   onMounted(() => {
         // Update the countdown every second
