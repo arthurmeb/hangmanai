@@ -33,7 +33,7 @@
 
       <div class="dashboard">
         <div class="image">
-          <img :src="daily.image" alt="">     
+          <img src="http://localhost:3000/assets/promptImages/1wizards.png" alt="">     
           <input class="input" placeholder="Guess the prompt!" @keyup.enter="handleGuess" v-model="userGuessPrime" :disabled="gameDone"/>          
         </div>
 
@@ -101,8 +101,28 @@
   <script setup>
   import { computed, onMounted} from "vue";
   import { ref } from "vue"
+  import io from "socket.io-client";
 
-  import axios from "axios";
+  let daily = ref()
+
+  const socket = io('http://localhost:3000');
+
+  socket.on('connect', () => {
+    console.log('Connected to server');
+});
+  socket.on('dailyUpdated', (newDaily) => {
+    // Do something with the updated daily data
+    console.log('Received updated daily:', newDaily);
+    daily.value = newDaily
+});
+
+  socket.on('idk', (jsonDaily) => {
+
+        daily.value = jsonDaily;
+        console.log('Jsonl content is:', daily.value)
+  });
+
+
 
 
   // Modal toggling 
@@ -141,28 +161,18 @@
 
         // Call updateCountdown when the component is mounted and call promptLoop when conditions are met
 
-  let daily = ref('Loading')
+    socket.on('dayOne', (currentDaily) => {
+      // Do something with the updated daily data
+      console.log('Received first ever daily.', currentDaily);
+      daily.value = currentDaily
+  });
 
   onMounted(() => {
-
         // Update the countdown every second
     setInterval(() => {
     updateCountdown()
     }, 
     1000);
-
-    axios
-      .get("http://localhost:3000/api/daily")
-      .then((response) => {
-        console.log("Daily data:", response.data);
-        daily.value = response.data
-        return {daily}
-
-      })
-      .catch((error) => {
-        // Handle errors here
-        console.error("Error fetching daily data:", error);
-      });
   });
 
 
