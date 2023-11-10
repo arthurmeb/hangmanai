@@ -33,7 +33,7 @@
 
       <div class="dashboard">
         <div class="image">
-          <img src="http://localhost:3000/assets/promptImages/1wizards.png" alt="">     
+          <img :src="daily.image" alt="">     
           <input class="input" placeholder="Guess the prompt!" @keyup.enter="handleGuess" v-model="userGuessPrime" :disabled="gameDone"/>          
         </div>
 
@@ -103,7 +103,7 @@
   import { ref } from "vue"
   import io from "socket.io-client";
 
-  let daily = ref()
+  let daily = ref('Loading')
 
   const socket = io('http://localhost:3000');
 
@@ -117,9 +117,9 @@
 });
 
   socket.on('idk', (jsonDaily) => {
-
-        daily.value = jsonDaily;
-        console.log('Jsonl content is:', daily.value)
+      daily.value = jsonDaily;
+      console.log('Starting daily is:', daily.value)
+      console.log('Daily image:', daily.value.image)
   });
 
 
