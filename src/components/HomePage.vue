@@ -69,11 +69,12 @@
       <div class="input" id="promptReveal" v-if="gameDone">
 
         <p>The right prompt was: <span style="color:rgb(54, 224, 61)"> {{ daily.lePrompt }}</span></p>
+        yuhh {{ testing }} ddd
 
               <!-- Results sharing vector -->
         <div class="input" id="resultsDisplay" v-for="item in allGuesses" :key="item">
 
-          <div v-for="word in item.guessString" :key="word">
+          <div id="shagaroom" v-for="word in item.guessString" :key="word">
             <span v-if="splitPrompt.includes(word)"> 🟩</span>
               <span v-else> ⬜</span> 
           </div>
@@ -83,7 +84,7 @@
 
         </div>
           <p> Hanggman #{{ daily.day }}</p>
-          <button> Share! </button>
+          <button> Copy to share! </button>
       </div>
 
     </div> 
@@ -111,15 +112,19 @@
     console.log('Connected to server');
 });
   socket.on('dailyUpdated', (jsonString) => {
-    // Do something with the updated daily data
+    // At midnight, update the daily, reset the game and clear all values.
     console.log('Received updated daily:', jsonString);
     daily.value = jsonString
+    gameDone.value = false
+    won.value = false
+    lost.value = false
+    localStorage.clear();
+    guessList.value = []
+    allCorrectWords.value = []
 });
 
   socket.on('idk', (jsonDaily) => {
       daily.value = jsonDaily;
-      console.log('Starting daily is:', daily.value)
-      console.log('Daily image:', daily.value.image)
   });
 
 
@@ -157,26 +162,13 @@
     countdown.value = `${hours} hours ${minutes} minutes ${seconds} seconds`;
   };
 
-
-
-        // Call updateCountdown when the component is mounted and call promptLoop when conditions are met
-
-  onMounted(() => {
-        // Update the countdown every second
-    setInterval(() => {
-    updateCountdown()
-    }, 
-    1000);
-  });
-
-
   
    // USER GUESS AND ACCURACY LOGIC
 
     let userGuessPrime = ref('')
               // make user's guess lowercase and strip punctuation
     let userGuess = computed(()=>userGuessPrime.value.toLowerCase().replace(/[.,/#!$%^&*;:{}=_`~()'"?]/g, ""))
-    let guessList = []
+    let guessList = ref()
     let guessAccuracy = ref(null)
     let lastGuess
     let correctWords
@@ -184,29 +176,31 @@
     let answerWords
     let allGuesses = ref([])
     let splitPrompt = ref()
-
     // Log user's guess => check if game is finished => check guess accuracy
 
             // when user presses enter, log their guess with its accuracy to guessList
 
     const handleGuess = () => {
-      answerWords = userGuess.value.split(" ")      
-      guessList.push({
+
+      answerWords = userGuess.value.split(" ")  
+
+      guessList.value.push({
         guess: userGuess.value,
         accuracy: guessAccuracy.value,
         guessWords: answerWords,
         rightWords: correctWords
       })
 
+      localStorage.setItem('storageGuessList', JSON.stringify(guessList.value))
+
               // run function to check guess's accuracy
       checkGuessAccuracy()
 
-      console.log('Answer words:', answerWords)
       
             // reset user input to empty for next guess
       userGuessPrime.value = ''
 
-      console.log('Current guess list:', guessList, 'accuracy:', lastGuess.accuracy)
+      console.log('Current guess list:', guessList.value, 'accuracy:', lastGuess.accuracy)
 
       }
       
@@ -221,7 +215,7 @@
       
           // get the previous guess in guessList array
 
-      lastGuess = guessList[guessList.length - 1]
+      lastGuess = guessList.value[guessList.value.length - 1]
 
           // make the user's previous guess into an array to be checked against prompt words
 
@@ -260,21 +254,27 @@
 
       // check if game is done
 
-    let gameDone = false
-    let won = false
-    let lost = false
+    let gameDone = ref(false)
+    let won = ref(false)
+    let lost = ref(false)
 
     let checkDone = () => {
-            // If 6 guesses are used,  end game and lose
+            
+      // If guess accuracy over 80%, end game and win
       if (lastGuess.accuracy >= 80){
-        gameDone = true
-        won = true
+        gameDone.value = true
+        won.value = true
+        localStorage.setItem('isGameDone', JSON.stringify(gameDone.value))
+        localStorage.setItem('hasWon', JSON.stringify(won.value))
         }
-            // If guess accuracy over 80%, end game and win
-      else if (guessList.length == 6)
+
+        // If 6 guesses are used,  end game and lose
+      else if (guessList.value.length == 6)
       {
-        gameDone = true
-        lost = true
+        gameDone.value = true
+        lost.value = true
+        localStorage.setItem('isGameDone', JSON.stringify(gameDone.value))
+        localStorage.setItem('hasLost', JSON.stringify(lost.value))
       }
       console.log('Game state has been checked.');
       }  
@@ -304,7 +304,23 @@
 
 
   }
- 
+
+
+          // Call updateCountdown when the component is mounted and call promptLoop when conditions are met
+
+  onMounted(() => {
+
+    // Load data from localStorage if available
+    guessList.value = JSON.parse(localStorage.getItem('storageGuessList')) || []
+    gameDone.value = JSON.parse(localStorage.getItem('isGameDone')) || false
+    won.value = JSON.parse(localStorage.getItem('hasWon'))
+    lost.value = JSON.parse(localStorage.getItem('hasLost')) || false
+        // Update the countdown every second
+    setInterval(() => {
+    updateCountdown()
+    }, 
+    1000);
+  });
 
 </script>
 
