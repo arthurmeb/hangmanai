@@ -69,7 +69,6 @@
       <div class="input" id="promptReveal" v-if="gameDone">
 
         <p>The right prompt was: <span style="color:rgb(54, 224, 61)"> {{ daily.lePrompt }}</span></p>
-        yuhh {{ testing }} ddd
 
               <!-- Results sharing vector -->
         <div class="input" id="resultsDisplay" v-for="item in allGuesses" :key="item">
@@ -92,7 +91,14 @@
     </div>
 
     <div class="navbar" id="footer">
-      <p> Follow me! Twitter </p>
+      <p> Follow me!</p>
+      <a href="https://twitter.com/codeBeboo" target="_blank">
+      <img src="../assets/logox.png" class="img" id="x" alt="x twitter logo">      
+      </a>
+      <a href="https://www.tiktok.com/@codeBeboo" target="_blank">
+      <img src="../assets/tiktok.png" class="img" id="x" alt="tiktok logo">      
+      </a>
+
     </div>  
 
   </div>
@@ -372,6 +378,7 @@ body {
 .navbar#footer{
   display: flex;
   justify-content: flex-end;
+  gap: 2vw;
 }
 
 /* timer */
@@ -428,6 +435,11 @@ body {
 .image img {
   height: fit-content;
   width: 40vw;
+}
+
+.img#x {
+  height: 20px;
+  width: 20px;
 }
 
       /* guesses */
@@ -525,7 +537,12 @@ div.guess#container {
   justify-content: center;
 }
 
-
+button {
+  background-color: #282424;
+  color: white;
+  border-radius: 11px;
+  font-family: space-grotesk;
+}
 /* Modal */
 
 .backdrop {
