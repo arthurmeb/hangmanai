@@ -6,7 +6,7 @@
       <h1>Hanggman</h1>
       <p @click="toggleModal">How to play</p>
     </div>
-
+<!-- How to play modal-->
     <div class="backdrop" @click.self="toggleModal" v-if="modalOpen">
       <div class="modal" v-if="modalOpen">
         <div class="modal" id="container"> 
@@ -30,14 +30,14 @@
       <div class="timer">
         <h1>NEXT IMAGE IN: {{ countdown }}</h1>
       </div>
-
+<!--Image and guess input-->
       <div class="dashboard">
         <div class="image">
           <img :src="daily.image" alt="">     
           <input class="input" placeholder="Guess the prompt!" @keyup.enter="handleGuess" v-model="userGuessPrime" :disabled="gameDone"/>          
         </div>
 
-
+<!--Guess results display-->
         <div class="guessDiv">
 
           <div class="guess"> <p> Your correct words:</p>
@@ -58,7 +58,7 @@
       </div>
 
     </div>
-    
+<!--Game results and prompt reveal-->
     <div class="inputGroup" id="input">
 
       <div v-if="won" style="background: green;"> You won, good job. Treat yourself to a cookie...</div>
@@ -91,7 +91,7 @@
     </div>
 
     <div class="navbar" id="footer">
-      <p> Follow me!</p>
+      <p> Made by codeBeboo</p>
       <a href="https://twitter.com/codeBeboo" target="_blank">
       <img src="../assets/logox.png" class="img" id="x" alt="x twitter logo">      
       </a>
@@ -102,7 +102,7 @@
     </div>  
 
   </div>
-  </template>
+</template>
   
   
   <script setup>
@@ -112,14 +112,16 @@
 
   let daily = ref('Loading')
 
-  const socket = io('http://localhost:3000');
+  const socket = io(window.location.origin)
+  console.log(window.location.origin)
 
   socket.on('connect', () => {
     console.log('Connected to server');
 });
   socket.on('dailyUpdated', (jsonString) => {
+
     // At midnight, update the daily, reset the game and clear all values.
-    console.log('Received updated daily:', jsonString);
+
     daily.value = jsonString
     gameDone.value = false
     won.value = false
@@ -129,12 +131,10 @@
     allCorrectWords.value = []
 });
 
+// When the daily is cycled, update the current one with the new one
   socket.on('idk', (jsonDaily) => {
       daily.value = jsonDaily;
   });
-
-
-
 
   // Modal toggling 
 
@@ -147,7 +147,7 @@
     let now
     let targetTime
 
-      // Function starts
+      // Function to count down to midnight
     const updateCountdown = () => {
 
     now = new Date();
@@ -182,13 +182,17 @@
     let answerWords
     let allGuesses = ref([])
     let splitPrompt = ref()
-    // Log user's guess => check if game is finished => check guess accuracy
+  
 
-            // when user presses enter, log their guess with its accuracy to guessList
+            // Function starts to handle each time the user presses enter to log a guess
 
     const handleGuess = () => {
 
+      // Split the user's guess into a new array called answerWords
+
       answerWords = userGuess.value.split(" ")  
+
+      // Push the user's full guess, accuracy, guess words array and global correct words to an object guessList
 
       guessList.value.push({
         guess: userGuess.value,
@@ -197,9 +201,11 @@
         rightWords: correctWords
       })
 
+      // Set guessList to local storage as well
+
       localStorage.setItem('storageGuessList', JSON.stringify(guessList.value))
 
-              // run function to check guess's accuracy
+              // run function to check guess's accuracy (defined further down)
       checkGuessAccuracy()
 
       
@@ -214,9 +220,9 @@
 
       let checkGuessAccuracy = () => {
 
-          // create promptWords array with each prompt word as an element
+          // split the daily's prompt into an array of each word
           
-      const promptWords = daily.value.lePrompt.split(" ")
+      const promptWords = daily.value.lePrompt.toLowerCase().split(" ")
       splitPrompt.value = promptWords
       
           // get the previous guess in guessList array
@@ -244,10 +250,16 @@
       })
 
       console.log('Prompt word array:', {promptWords}, 'Correct words:', {correctWords}),
+
           // Round last guess accuracy to whole
+
       lastGuess.accuracy = Math.floor((correctWords.length / promptWords.length) * 100)
+
           // Run function to check if game is over or not
+
       checkDone()
+
+      // Create allGuesses object just to check the accuracy of the most recent guess (i think?)
 
       allGuesses.value.push({
         guessString: answerWords,
@@ -317,11 +329,14 @@
   onMounted(() => {
 
     // Load data from localStorage if available
+
     guessList.value = JSON.parse(localStorage.getItem('storageGuessList')) || []
     gameDone.value = JSON.parse(localStorage.getItem('isGameDone')) || false
-    won.value = JSON.parse(localStorage.getItem('hasWon'))
+    won.value = JSON.parse(localStorage.getItem('hasWon')) || false
     lost.value = JSON.parse(localStorage.getItem('hasLost')) || false
+
         // Update the countdown every second
+
     setInterval(() => {
     updateCountdown()
     }, 
